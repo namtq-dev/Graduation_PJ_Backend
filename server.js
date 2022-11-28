@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
+const { readdirSync } = require('fs');
+
 const app = express();
 
 // CORS config
@@ -10,13 +12,9 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
-  res.send('Welcome from home');
-});
-
-app.get('/books', (req, res) => {
-  res.send('Welcome from books page');
-});
+readdirSync('./routes').map((route) =>
+  app.use('/', require('./routes/' + route))
+);
 
 app.listen(8000, () => {
   console.log('Server is listening on port 8000');

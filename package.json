@@ -19,6 +19,7 @@
   "homepage": "https://github.com/namtq184161/Graduation_PJ_Backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "nodemon": "^2.0.20"
   }

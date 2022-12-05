@@ -21,6 +21,8 @@ async function connectDB() {
 
 const app = express();
 
+app.use(express.json());
+
 // CORS config
 var corsOptions = {
   origin: 'http://localhost:3000',

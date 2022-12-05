@@ -12,3 +12,19 @@ exports.validateLength = (text, min, max) => {
   }
   return true;
 };
+
+exports.validateUsername = async (username) => {
+  let continueCheck = false;
+
+  do {
+    let isTakenUsername = await User.findOne({ username });
+    if (isTakenUsername) {
+      //change username
+      username += (+new Date() * Math.random()).toString().substring(0, 2);
+      continueCheck = true;
+    } else {
+      continueCheck = false;
+    }
+  } while (continueCheck);
+  return username;
+};

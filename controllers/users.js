@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { generateToken } = require('../helpers/tokens');
+const { sendVerificationEmail } = require('../helpers/mailer');
 const {
   validateEmail,
   validateLength,
@@ -14,7 +15,6 @@ exports.register = async (req, res) => {
       lastName,
       email,
       password,
-      username,
       bYear,
       bMonth,
       bDay,
@@ -67,8 +67,21 @@ exports.register = async (req, res) => {
     }).save();
 
     const emailVerificationToken = generateToken({ id: user._id }, '30m');
+    const emailVerificationUrl = `${process.env.FRONTEND_BASE_URL}/activate/${emailVerificationToken}`;
+    sendVerificationEmail(user.email, user.firstName, emailVerificationUrl);
 
-    res.json(user);
+    const loginToken = generateToken({ id: user._id }, '7d');
+    res.send({
+      id: user._id,
+      username: user.username,
+      picture: user.picture,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      loginToken,
+      verified: user.verified,
+      message:
+        'Register successfully! Please check your email to activate your account!',
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
